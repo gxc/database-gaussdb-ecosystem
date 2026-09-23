@@ -1,7 +1,7 @@
 # GaussDB Read-Only MCP Server (gaussdb-ro-mcp) Integration Guide
 
-> Applicable versions: gaussdb-ro-mcp v0.2.2; GaussDB Kernel 503.1.0 and above (centralized / distributed), openGauss 6.0.0
-> Updated: 2026-09-10
+> Applicable versions: gaussdb-ro-mcp v0.2.3; GaussDB Kernel 503.1.0 and above (centralized / distributed), openGauss 6.0.0
+> Updated: 2026-09-23
 > Project: <https://github.com/gxc/gaussdb-ro-mcp>
 
 ## 1. Overview
@@ -25,12 +25,14 @@ The biggest risk of connecting a database to an AI agent is **prompt injection**
 |---|---|
 | GaussDB | Centralized / primary-standby / distributed; Kernel 503.1.0 and above |
 | Account | A read-only account with only SELECT privileges is recommended (layer 3 in Section 5) |
-| Runtime | Linux amd64 / arm64 (statically linked, no runtime dependencies); or build from source with Go 1.26+ |
+| Runtime | Linux amd64 / arm64, macOS (Apple Silicon), Windows amd64 (statically linked, no runtime dependencies); or build from source with Go 1.26+ |
 | MCP client | Claude Code, OpenCode, or any stdio-capable MCP client |
 
 ## 3. Quick Start
 
 ### 3.1 Install
+
+**Linux**:
 
 ```bash
 curl -LO https://github.com/gxc/gaussdb-ro-mcp/releases/latest/download/gaussdb-ro-mcp-linux-amd64
@@ -39,6 +41,22 @@ gaussdb-ro-mcp --version
 ```
 
 (Download `gaussdb-ro-mcp-linux-arm64` on ARM64 machines.)
+
+**macOS** (Apple Silicon):
+
+```bash
+curl -LO https://github.com/gxc/gaussdb-ro-mcp/releases/latest/download/gaussdb-ro-mcp-darwin-arm64
+sudo install -Dm 755 gaussdb-ro-mcp-darwin-arm64 /usr/local/bin/gaussdb-ro-mcp
+gaussdb-ro-mcp --version
+```
+
+**Windows** (PowerShell; drop it into a PATH directory and it is callable directly):
+
+```powershell
+Invoke-WebRequest -Uri "https://github.com/gxc/gaussdb-ro-mcp/releases/latest/download/gaussdb-ro-mcp-windows-amd64.exe" -OutFile "gaussdb-ro-mcp.exe"
+Move-Item .\gaussdb-ro-mcp.exe "$env:LOCALAPPDATA\Microsoft\WindowsApps\"   # on PATH by default
+gaussdb-ro-mcp --version
+```
 
 ### 3.2 Write the config file
 
@@ -104,7 +122,7 @@ Call `test_connection` in the agent. Expected result:
 | `test_connection` | Connectivity test: version / current database / user / read-only status / latency |
 | `list_schemas` | Schema list (relation counts and comments; system schemas excluded by default) |
 | `list_tables` | Table/view list (kind, estimated rows, comments; filterable by schema) |
-| `describe_table` | Table structure: columns (type/nullability/default/comment), primary keys and constraints, all index definitions; views return their defining SQL; partitioned tables return the partition list (`pg_partition`) |
+| `describe_table` | Table structure: columns (type/nullability/default/comment), primary keys and constraints, all index definitions; views / materialized views return their defining SQL; partitioned tables return the partition list (`pg_partition`) |
 | `execute_select` | Run a read-only SELECT (the only SQL entry point): row limit, timeout, truncation flag |
 
 ## 5. Read-Only Guarantee: Three Layers of Defense in Depth
@@ -152,4 +170,5 @@ Customize `server.blocked_functions` (note: a non-empty list replaces the defaul
 
 * Project home and full documentation: <https://github.com/gxc/gaussdb-ro-mcp>
 * Issue tracker: <https://github.com/gxc/gaussdb-ro-mcp/issues>
+* Listed on the official MCP Registry: `io.github.gxc/gaussdb-ro-mcp` (<https://registry.modelcontextprotocol.io>)
 * Driver: gaussdb-go v1.0.0-rc1 (<https://github.com/HuaweiCloudDeveloper/gaussdb-go>)

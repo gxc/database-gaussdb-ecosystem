@@ -1,7 +1,7 @@
 # GaussDB 只读 MCP 服务器（gaussdb-ro-mcp）集成指南
 
-> 适用版本：gaussdb-ro-mcp v0.2.2；GaussDB Kernel 503.1.0 及以上（集中式 / 分布式）、openGauss 6.0.0
-> 更新日期：2026-09-10
+> 适用版本：gaussdb-ro-mcp v0.2.3；GaussDB Kernel 503.1.0 及以上（集中式 / 分布式）、openGauss 6.0.0
+> 更新日期：2026-09-23
 > 项目地址：<https://github.com/gxc/gaussdb-ro-mcp>
 
 ## 1. 概述
@@ -25,12 +25,14 @@ Claude Code / OpenCode ──MCP(stdio)──> gaussdb-ro-mcp ──官方驱动
 |---|---|
 | GaussDB | 集中式 / 主备 / 分布式均可；Kernel 503.1.0 及以上 |
 | 账号 | 建议使用仅授予 SELECT 权限的只读账号（见第 5 节第 3 层） |
-| 运行环境 | Linux amd64 / arm64（静态链接，无运行时依赖）；或 Go 1.26+ 自行构建 |
+| 运行环境 | Linux amd64 / arm64、macOS（Apple Silicon）、Windows amd64（静态链接，无运行时依赖）；或 Go 1.26+ 自行构建 |
 | MCP 客户端 | Claude Code、OpenCode 或任意支持 stdio MCP 的工具 |
 
 ## 3. 快速开始
 
 ### 3.1 安装
+
+**Linux**：
 
 ```bash
 curl -LO https://github.com/gxc/gaussdb-ro-mcp/releases/latest/download/gaussdb-ro-mcp-linux-amd64
@@ -39,6 +41,22 @@ gaussdb-ro-mcp --version
 ```
 
 （ARM64 机器请下载 `gaussdb-ro-mcp-linux-arm64`。）
+
+**macOS**（Apple Silicon）：
+
+```bash
+curl -LO https://github.com/gxc/gaussdb-ro-mcp/releases/latest/download/gaussdb-ro-mcp-darwin-arm64
+sudo install -Dm 755 gaussdb-ro-mcp-darwin-arm64 /usr/local/bin/gaussdb-ro-mcp
+gaussdb-ro-mcp --version
+```
+
+**Windows**（PowerShell；放入 PATH 目录后即可直接调用）：
+
+```powershell
+Invoke-WebRequest -Uri "https://github.com/gxc/gaussdb-ro-mcp/releases/latest/download/gaussdb-ro-mcp-windows-amd64.exe" -OutFile "gaussdb-ro-mcp.exe"
+Move-Item .\gaussdb-ro-mcp.exe "$env:LOCALAPPDATA\Microsoft\WindowsApps\"   # 该目录默认在 PATH 中
+gaussdb-ro-mcp --version
+```
 
 ### 3.2 编写配置文件
 
@@ -104,7 +122,7 @@ OpenCode 的 `opencode.json` 类似，见项目 README。
 | `test_connection` | 连通性测试：版本 / 当前库 / 用户 / 只读状态 / 延迟 |
 | `list_schemas` | 模式清单（含对象数与注释，默认排除系统模式） |
 | `list_tables` | 表/视图清单（类型、估算行数、注释，可按 schema 过滤） |
-| `describe_table` | 表结构：列（类型/可空/默认值/注释）、主键与约束、全部索引定义；视图返回定义 SQL；分区表返回分区清单（`pg_partition`） |
+| `describe_table` | 表结构：列（类型/可空/默认值/注释）、主键与约束、全部索引定义；视图 / 物化视图返回定义 SQL；分区表返回分区清单（`pg_partition`） |
 | `execute_select` | 执行只读 SELECT（唯一 SQL 入口）：行数上限、超时、截断标记 |
 
 ## 5. 只读保障：三层纵深防御
@@ -152,4 +170,5 @@ gaussdb-ro-mcp v0.2.0 起统一采用上述**事务级**方案，在集中式 / 
 
 * 项目主页与完整文档：<https://github.com/gxc/gaussdb-ro-mcp>
 * 问题反馈：<https://github.com/gxc/gaussdb-ro-mcp/issues>
+* MCP 官方 Registry 收录：`io.github.gxc/gaussdb-ro-mcp`（<https://registry.modelcontextprotocol.io>）
 * 驱动：gaussdb-go v1.0.0-rc1（<https://github.com/HuaweiCloudDeveloper/gaussdb-go>）
