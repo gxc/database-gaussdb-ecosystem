@@ -1,7 +1,7 @@
 # GaussDB Read-Only MCP Server (gaussdb-ro-mcp) Integration Guide
 
-> Applicable versions: gaussdb-ro-mcp v0.2.3; GaussDB Kernel 503.1.0 and above (centralized / distributed), openGauss 6.0.0
-> Updated: 2026-09-23
+> Applicable versions: gaussdb-ro-mcp v0.2.4; GaussDB Kernel 503.1.0 and above (centralized / distributed), openGauss 6.0.0
+> Updated: 2026-09-29
 > Project: <https://github.com/gxc/gaussdb-ro-mcp>
 
 ## 1. Overview
@@ -171,4 +171,5 @@ Customize `server.blocked_functions` (note: a non-empty list replaces the defaul
 * Project home and full documentation: <https://github.com/gxc/gaussdb-ro-mcp>
 * Issue tracker: <https://github.com/gxc/gaussdb-ro-mcp/issues>
 * Listed on the official MCP Registry: `io.github.gxc/gaussdb-ro-mcp` (<https://registry.modelcontextprotocol.io>)
+* Continuous integration: GitHub Actions runs `go vet`, `go test -race`, four-platform cross-compilation, and govulncheck security scanning ([CI status](https://github.com/gxc/gaussdb-ro-mcp/actions/workflows/ci.yml))
 * Driver: gaussdb-go v1.0.0-rc1 (<https://github.com/HuaweiCloudDeveloper/gaussdb-go>)

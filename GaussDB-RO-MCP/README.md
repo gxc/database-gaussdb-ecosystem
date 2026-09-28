@@ -1,7 +1,7 @@
 # GaussDB 只读 MCP 服务器（gaussdb-ro-mcp）集成指南
 
-> 适用版本：gaussdb-ro-mcp v0.2.3；GaussDB Kernel 503.1.0 及以上（集中式 / 分布式）、openGauss 6.0.0
-> 更新日期：2026-09-23
+> 适用版本：gaussdb-ro-mcp v0.2.4；GaussDB Kernel 503.1.0 及以上（集中式 / 分布式）、openGauss 6.0.0
+> 更新日期：2026-09-29
 > 项目地址：<https://github.com/gxc/gaussdb-ro-mcp>
 
 ## 1. 概述
@@ -171,4 +171,5 @@ gaussdb-ro-mcp v0.2.0 起统一采用上述**事务级**方案，在集中式 / 
 * 项目主页与完整文档：<https://github.com/gxc/gaussdb-ro-mcp>
 * 问题反馈：<https://github.com/gxc/gaussdb-ro-mcp/issues>
 * MCP 官方 Registry 收录：`io.github.gxc/gaussdb-ro-mcp`（<https://registry.modelcontextprotocol.io>）
+* 持续集成：GitHub Actions 自动执行 `go vet`、`go test -race`、四平台交叉编译与 govulncheck 安全扫描（[CI 状态](https://github.com/gxc/gaussdb-ro-mcp/actions/workflows/ci.yml)）
 * 驱动：gaussdb-go v1.0.0-rc1（<https://github.com/HuaweiCloudDeveloper/gaussdb-go>）
